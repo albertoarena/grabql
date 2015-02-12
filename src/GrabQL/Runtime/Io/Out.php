@@ -47,9 +47,11 @@ class Out extends Io
                 $this->write($arg);
             }
         } else if ($args instanceof Base) {
-            fwrite($this->stream, $args->toString() . self::CR);
+            //fwrite($this->stream, $args->toString() . self::CR);
+            echo $args->toString() . self::CR;
         } else {
-            fwrite($this->stream, strval($args) . self::CR);
+            //fwrite($this->stream, strval($args) . self::CR);
+            echo strval($args) . self::CR;
         }
     }
 } 
