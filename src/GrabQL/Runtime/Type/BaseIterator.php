@@ -6,7 +6,7 @@
  * @subpackage  Runtime
  * @author      Alberto Arena <arena.alberto@gmail.com>
  * @copyright   Alberto Arena <arena.alberto@gmail.com>
- * @license     http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
+ * @license     https://github.com/albertoarena/grabql/blob/master/LICENCE  MIT, BSD and GPL
  * @link        http://albertoarena.co.uk/grabql
  *
  */
