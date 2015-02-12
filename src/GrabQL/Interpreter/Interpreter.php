@@ -22,6 +22,9 @@ class Interpreter
     /** @internal Class ID */
     const ME = 'Interpreter';
 
+    /** @internal CLI default */
+    const CLI_DEFAULT = '--- GQL Interpreter 0.1 ---';
+
     /** @var \GrabQL\Interpreter\Parser\Parser */
     protected $parser;
 
@@ -33,6 +36,9 @@ class Interpreter
 
     /** @var String */
     protected $context;
+
+    /** @var bool */
+    protected $silent;
 
     public function __construct()
     {
@@ -75,6 +81,7 @@ class Interpreter
         return array('Usage: gql.php [options] [<file>]',
             '',
             '  -f <file>        Parse and execute <file> for every input line',
+            '  -s               Silent mode',
             '');
     }
 
@@ -99,6 +106,10 @@ class Interpreter
             case 'h':
             case '?':
                 call_user_func_array(array('GrabQL\Utils\Logger', 'write'), $this->help());
+                break;
+
+            case 's':
+                $this->silent = true;
                 break;
 
             default:
@@ -182,7 +193,9 @@ class Interpreter
 
             if ($this->source !== null) {
 
-                $this->runtime->out()->write('--- GQL Interpreter 0.1 ---');
+                if (!$this->silent) {
+                    $this->runtime->out()->write(self::CLI_DEFAULT);
+                }
 
                 // Bootstrap runtime
                 $this->runtime->bootstrap();
