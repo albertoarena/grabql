@@ -5,6 +5,8 @@ one of its requirements is to be used embedded in a PHP application.
 
 **This is not yet a stable version, work in progress! More details coming soon.**
 
+**_I NEED HELP, PLEASE CONTACT ME IF YOU WANT TO COLLABORATE TO THIS PROJECT._**
+
 ## Install GrabQL
 
     composer update
