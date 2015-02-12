@@ -1,0 +1,37 @@
+def echo: args
+    ! echo args;
+enddef
+
+def exit
+   ! GrabApplication::stop();
+enddef
+
+def select
+    :format
+    select
+    ?$what
+    ?from $src
+    ?to $dest
+    ?where $condition
+    ?limit $l0, $l1
+
+    :code
+    ! new GrabQL({{$what}}, {{$src}}, {{$dest}}, {{$condition}}, array({{$l0}}, {{$l1}}));
+enddef
+
+def var
+    :format
+    var $var
+    ?= $value
+
+    :code
+    ! new GrabVar({{$var}}, {{$value}});
+enddef
+
+def open
+    :format
+    open $source
+
+    :code
+    ! new GrabStream({{$source}});
+enddef

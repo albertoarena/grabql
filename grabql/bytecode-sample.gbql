@@ -1,0 +1,23 @@
+# gqlbc,00.01
+$_runtime = new GrabQL\Runtime();
+
+# boot
+$_runtime()->bootstrap();
+
+# procedure listResults
+$_1x4jhq = new GrabQL\Runtime\Collection\Procedure("listResults");
+$_1x4jhq->setParameters("stream");
+$_1x4jhq->setCode(function($args) {
+    foreach ($args["stream"] as $i => $v) { $_runtime->cout()->print($i . ": " . $v["name"]); }
+});
+
+# start runtime
+$_runtime->start();
+
+# code
+$_hqE17a = new GrabQL\Runtime\Commands\Select("//name", "www.google.com", $_1x4jhq));
+$_a3X13b1 = $_hqE17a->execute()->getResults();
+$_1x4jhq->execute($_a3X13b1);
+
+# stop runtime and exit
+$_runtime->stop();

@@ -1,0 +1,16 @@
+# ========================================================================
+# sample1.gql
+#
+# Query a site using xpath and format result in JSON format
+# ========================================================================
+
+# Variables
+var url = 'albertoarena.co.uk'
+var results = {}
+var what = {'href', '@value'}
+
+# Query using xPath
+select what from url to results where '//a[@class="post-link"]'
+
+# Format results using JSON format
+echo 'Query results:' results:json
