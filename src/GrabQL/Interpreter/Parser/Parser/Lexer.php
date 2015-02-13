@@ -178,7 +178,7 @@ class Lexer extends AbstractLexer
             }
 
             return self::T_IDENTIFIER;
-        } else if ($value[0] === '?' || $value[0] === ':') {
+        } else if ($value[0] === '?') {
             return self::T_INPUT_PARAMETER;
         } else {
             switch ($value) {

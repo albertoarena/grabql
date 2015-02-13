@@ -39,6 +39,11 @@ class Select extends Command
     protected $limit;
 
     /**
+     * @var string
+     */
+    protected $curlClass;
+
+    /**
      * @param string|Base|null $what
      * @param string|Base|null $from
      * @param string|Base|null $to
@@ -47,11 +52,21 @@ class Select extends Command
      */
     public function __construct($what = null, $from = null, $to = null, $where = null, $limit = null)
     {
+        $this->curlClass = 'Curl\Curl';
+
         $this->setWhat($what);
         $this->setFrom($from);
         $this->setTo($to);
         $this->setWhere($where);
         $this->setLimit($limit);
+    }
+
+    /**
+     * @param string $curlClass
+     */
+    public function setCurlClass($curlClass)
+    {
+        $this->curlClass = $curlClass;
     }
 
     /**
@@ -196,7 +211,7 @@ class Select extends Command
         $params = $this->getCurlParams();
 
         // Get data using Curl
-        $curl = new Curl();
+        $curl = new $this->curlClass();
         $curl->get($params['url'], $params['params']);
         $data = $curl->response;
         $curl->close();

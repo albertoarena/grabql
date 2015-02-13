@@ -24,6 +24,7 @@ abstract class Command extends Entity implements Executable
     {
         foreach ($options as $key => $value)
         {
+            $key = ucfirst(strtolower($key));
             $this->{"set${key}"}($value);
         }
     }

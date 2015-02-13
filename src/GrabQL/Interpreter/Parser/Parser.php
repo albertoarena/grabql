@@ -30,6 +30,11 @@ class Parser
     protected $line;
 
     /**
+     * @var bool
+     */
+    protected $triggerSyntaxErrorException;
+
+    /**
      * @param string|null $gql
      */
     public function __construct($gql = null)
@@ -37,6 +42,15 @@ class Parser
         $this->lexer = new Lexer($gql);
         $this->line = 0;
         $this->syntaxTree = array();
+        $this->triggerSyntaxErrorException = true;
+    }
+
+    /**
+     * @param bool $v
+     */
+    public function setTriggerSyntaxErrorException($v)
+    {
+        $this->triggerSyntaxErrorException = ($v ? true : false);
     }
 
     /**
@@ -103,8 +117,8 @@ class Parser
 
             default:
                 // Error
-                $statement = '';
-                $this->syntaxError('Invalid token', $this->lexer->lookahead);
+                $statement = NULL;
+                $this->syntaxError('Invalid token: ' . $this->lexer->lookahead['value']);
                 break;
         }
 
@@ -134,12 +148,13 @@ class Parser
     /**
      * @param $error
      * @param mixed|null $info
-     *
-     * @todo It should generate an Exception
+     * @throws \Exception
      */
     protected function syntaxError($error, $info = null)
     {
-        Logger::writePrefix(self::ME, 'Syntax error: ' . $error, $info);
+        if ($this->triggerSyntaxErrorException) {
+            throw new \Exception('Syntax error: ' . $error);
+        }
     }
 
 } 

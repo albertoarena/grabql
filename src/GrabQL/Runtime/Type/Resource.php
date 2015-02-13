@@ -12,10 +12,14 @@
  */
 namespace GrabQL\Runtime\Type;
 
+// @todo Mock class, it should manage a true stream
 class Resource extends Base
 {
     /** @var resource */
     protected $resource;
+
+    /** @var string */
+    protected $stream;
 
     /**
      * @param null $args
@@ -23,29 +27,47 @@ class Resource extends Base
      */
     protected function init($args = null)
     {
-        // @todo
+        $this->stream = '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getStream()
+    {
+        return $this->stream;
     }
 
     /**
      * @param resource $buffer
      * @param int|null $length
-     * @return mixed|null
      */
     public function read($buffer, $length = null)
     {
         // @todo
-        return null;
     }
 
     /**
-     * @param resource $buffer
+     * @param resource|string $buffer
      * @param int|null $length
-     * @return mixed|null
      */
     public function write($buffer, $length = null)
     {
-        // @todo
-        return null;
+        if (is_resource($buffer)) {
+            $this->stream .= stream_get_contents($buffer, $length);
+        }
+        else if ($buffer instanceof Map) {
+            // @todo Improve streaming of Map, currently limited to value
+            foreach ($buffer as $index => $value) {
+                $this->stream .= $value->getValue();
+            }
+        }
+        else if ($buffer instanceof Base) {
+            $this->stream .= substr($buffer->asString(), 0, $length);
+        }
+        else {
+            $this->stream .= substr($buffer, 0, $length);
+        }
     }
 
     /**
