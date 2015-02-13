@@ -18,7 +18,8 @@
         "stil/xpath-selector": "dev-master",
         "nette/tokenizer": "~2.3@dev",
         "doctrine/lexer": "~1.0@dev",
-        "phpunit/phpunit": "~4.7@dev"
+        "phpunit/phpunit": "~4.7@dev",
+        "mikey179/vfsStream": ">=1.0.0"
     },
     "version": "0.1",
     "bin": ["gql.php"],

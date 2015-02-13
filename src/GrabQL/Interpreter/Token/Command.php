@@ -35,10 +35,10 @@ class Command extends AbstractToken
         // Create an instance of the command
         $commandInstance = CommandFactory::build($this->token['value']);
         //GrabQL\Utils\Logger::writePrefix('Command.internalProcess, command', $commandInstance);
-        $commandInstance->setOptions($scalar);
 
         // Execute the command
         if ($commandInstance !== null) {
+            $commandInstance->setOptions($scalar);
             $commandInstance->execute($scalar);
         } else {
             throw new \Exception('Command not found: ' . $this->token['value']);

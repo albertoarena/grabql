@@ -48,7 +48,15 @@ class Parser
     }
 
     /**
-     * @param string|null $gql
+     * @return int
+     */
+    public function getLine()
+    {
+        return $this->line;
+    }
+
+    /**
+     * @param array|null $gql
      * @return array
      */
     public function parse($gql = null)

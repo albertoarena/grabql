@@ -19,7 +19,7 @@ class SelectTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Select::setOptions
+     * @covers GrabQL\Runtime\Command\Select::setOptions
      */
     public function testSetOptions()
     {
@@ -35,7 +35,7 @@ class SelectTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Select::execute
+     * @covers GrabQL\Runtime\Command\Select::execute
      */
     public function testExecute()
     {

@@ -48,16 +48,17 @@ class Interpreter
 
     /**
      * @param string $path
+     * @throws \Exception
      */
     protected function loadSource($path)
     {
-        Logger::writePrefix(self::ME, 'Loading source: ' . $path);
+        // Logger::writePrefix(self::ME, 'Loading source: ' . $path);
         if (file_exists($path)) {
             // @todo Improve loading mechanism, don't use file_get_contents
             $this->source = file_get_contents($path);
             $this->normalise();
         } else {
-            Logger::writePrefix(self::ME, 'File not found');
+            throw new \Exception('File not found: ' . $path);
         }
     }
 
@@ -118,38 +119,6 @@ class Interpreter
         }
 
         return $index;
-    }
-
-    /**
-     * Process a scalar
-     *
-     * @param $scalar
-     * @return null
-     * @throws \Exception
-     */
-    protected function processScalar($scalar)
-    {
-        $ret = null;
-        $isObject = false;
-        $openObject = null;
-        foreach ($scalar as $v) {
-            if ($v['type'] == Lexer::T_OPEN_CURLY_BRACE) {
-                if ($isObject || $openObject) {
-                    throw new \Exception('Invalid definition of an object: duplicated: {');
-                }
-                $isObject = true;
-                $openObject = true;
-            }
-            else if ($v['type'] == Lexer::T_CLOSE_CURLY_BRACE) {
-                if (!$isObject || !$openObject) {
-                    throw new \Exception('Invalid definition of an object: missing }');
-                }
-            }
-            else {
-
-            }
-        }
-        return $ret;
     }
 
     /**

@@ -7,14 +7,13 @@ class EchooTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @covers Echoo::execute
+     * @covers GrabQL\Runtime\Command\Echoo::execute
      */
     public function testExecute()
     {
-        // @todo
         $echo = new Echoo();
         $text = '123';
-        //$this->expectOutputString($text);
+        $this->expectOutputString($text . "\n");
         $echo->execute(array($text));
     }
 

@@ -5,7 +5,7 @@ class RuntimeTest extends PHPUnit_Framework_TestCase
 {
 
     /**
-     * @covers Runtime::getStatus
+     * @covers GrabQL\Runtime\Runtime::getStatus
      */
     public function testStatus()
     {
@@ -14,11 +14,12 @@ class RuntimeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(Runtime::STATUS_BOOTSTRAP, $runtime->bootstrap()->getStatus());
         $this->assertEquals(Runtime::STATUS_RUN, $runtime->execute()->getStatus());
         $this->assertEquals(Runtime::STATUS_STOP, $runtime->stop()->getStatus());
-        $this->assertEquals(Runtime::STATUS_ERROR, $runtime->error('')->getStatus());
+        $this->expectOutputString('Error: error' . "\n");
+        $this->assertEquals(Runtime::STATUS_ERROR, $runtime->error('error')->getStatus());
     }
 
     /**
-     * @covers Runtime::setMain
+     * @covers GrabQL\Runtime\Runtime::setMain
      */
     public function testSetMain()
     {
@@ -31,7 +32,7 @@ class RuntimeTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Runtime::execute
+     * @covers GrabQL\Runtime\Runtime::execute
      */
     public function testExecute()
     {
@@ -46,7 +47,7 @@ class RuntimeTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Runtime::procedures
+     * @covers GrabQL\Runtime\Runtime::procedures
      */
     public function testProcedures()
     {
@@ -55,7 +56,7 @@ class RuntimeTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Runtime::symbols
+     * @covers GrabQL\Runtime\Runtime::symbols
      */
     public function testSymbols()
     {
@@ -64,7 +65,7 @@ class RuntimeTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Runtime::out
+     * @covers GrabQL\Runtime\Runtime::out
      */
     public function testOut()
     {
@@ -73,7 +74,7 @@ class RuntimeTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Runtime::in
+     * @covers GrabQL\Runtime\Runtime::in
      */
     public function testIn()
     {

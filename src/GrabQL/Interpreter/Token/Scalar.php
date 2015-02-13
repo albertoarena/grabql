@@ -33,11 +33,15 @@ class Scalar extends AbstractToken
     }
 
     /**
-     * @param $isCommand
+     * @param bool|null $isCommand
+     * @return bool
      */
-    public function isCommand($isCommand)
+    public function isCommand($isCommand = null)
     {
-        $this->isCommand = $isCommand;
+        if (!is_null($isCommand)) {
+            $this->isCommand = $isCommand;
+        }
+        return $this->isCommand;
     }
 
     /**
@@ -45,7 +49,7 @@ class Scalar extends AbstractToken
      */
     public function internalProcess()
     {
-        //Logger::writePrefix('Scalar.process', $args);
+        //\GrabQL\Utils\Logger::writePrefix('Scalar.process', array('token' => $this->token, 'data' => $this->data));
         $this->isObject = false;
         $this->openCurlyBraces = false;
 
@@ -65,32 +69,21 @@ class Scalar extends AbstractToken
     }
 
     /**
-     * @param $v
-     * @param $type
-     * @return bool
-     */
-    static protected function isLexerType($v, $type)
-    {
-        if (is_array($v) && array_key_exists('type', $v)) {
-            return $v['type'] == $type;
-        }
-        return false;
-    }
-
-    /**
      * @param array $token
      * @return Reference|null
      * @throws \Exception
      */
     protected function parseElement($token)
     {
+        //\GrabQL\Utils\Logger::writePrefix('Scalar.parseElement', $token);
+
         $ret = null;
         switch ($token['type']) {
 
             case Lexer::T_IDENTIFIER:
                 $id = $token['value'];
                 $filter = null;
-                #GrabQL\Utils\Logger::writePrefix('Scalar.parseScalar', 'identifier: ' . $id);
+                #GrabQL\Utils\Logger::writePrefix('Scalar.parseElement', 'identifier: ' . $id);
 
                 // Check if identifier contains a filter ...
                 if (preg_match('/([^:]*):([^\s]*)/', $id, $matches)) {
@@ -120,18 +113,18 @@ class Scalar extends AbstractToken
                 break;
 
             case Lexer::T_OPEN_CURLY_BRACE:
-                //GrabQL\Utils\Logger::writePrefix('Scalar.parseScalar', 'open curly brace');
+                //GrabQL\Utils\Logger::writePrefix('Scalar.parseElement', 'open curly brace');
                 $this->isObject = true;
                 $this->openCurlyBraces = true;
                 break;
 
             case Lexer::T_CLOSE_CURLY_BRACE:
-                //GrabQL\Utils\Logger::writePrefix('Scalar.parseScalar', 'close curly brace');
+                //GrabQL\Utils\Logger::writePrefix('Scalar.parseElement', 'close curly brace');
                 $this->openCurlyBraces = false;
                 break;
 
             default:
-                //GrabQL\Utils\Logger::writePrefix('Scalar.parseScalar', 'value: ' . $token['value']);
+                //GrabQL\Utils\Logger::writePrefix('Scalar.parseElement', 'value: ' . $token['value']);
                 $ret = $token['value'];
                 break;
 
