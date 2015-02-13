@@ -192,7 +192,7 @@ class InterpreterTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidDefinitionRun()
     {
-        // @todo
+        // @todo Invalid definition triggers several errors
         /*
         $args = array(
             '-s',
