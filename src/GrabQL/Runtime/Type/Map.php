@@ -23,56 +23,87 @@ class Map extends BaseIterator
     protected $ordered;
 
     /**
-     * @param array|null $args
+     * @param array|mixed|null $args
+     * @throws \Exception
      * @return mixed|void
      */
     protected function init($args = null)
     {
+        parent::init($args);
+
         $this->setValues(array());
         $this->setOrdered(false);
-        if ($args instanceof Map) {
-            $this->copyObject($args);
-        } else if (is_array($args)) {
-            foreach ($args as $idx => $arg) {
-                if (!$arg instanceof Base) {
-                    $arg = TypeFactory::createInstance(null, $arg);
-                }
-                $this->atImplicit($idx, $arg);
-            }
-        } else if (is_object($args)) {
 
-            $class = new \ReflectionClass(get_class($args));
+        if (is_null($args)) {
+            // NOP
+        } elseif ($args instanceof Map) {
+            $this->copyObject($args);
+        } elseif (is_array($args)) {
+            $this->initFromArray($args);
+        } elseif (is_object($args)) {
+            $this->initFromObject($args);
+        } else {
+            throw new \Exception('Invalid value for a map (only Map, array or object accepted)');
+        }
+    }
+
+    /**
+     * @param array $obj
+     */
+    protected function initFromArray($obj)
+    {
+        $this->clear();
+        if (is_array($obj)) {
+            foreach ($obj as $idx => $value) {
+                if (!$value instanceof Base) {
+                    $value = TypeFactory::createInstance(null, $value);
+                }
+                $this->atImplicit($idx, $value);
+            }
+        }
+    }
+
+    /**
+     * @param object $obj
+     */
+    protected function initFromObject($obj)
+    {
+        $this->clear();
+        if (is_object($obj)) {
+            $class = new \ReflectionClass(get_class($obj));
             $properties = $class->getProperties(\ReflectionProperty::IS_PUBLIC);
             $methods = $class->getMethods(\ReflectionProperty::IS_PUBLIC);
 
-            //var_dump($methods); exit;
-
             // Add properties
             foreach ($properties as $property) {
-                $this->atImplicit($property, $args->{$property});
+                $propertyName = $property->getName();
+                $this->atImplicit($propertyName, TypeFactory::createInstance(null, $obj->$propertyName));
             }
             // Add methods
             foreach ($methods as $method) {
-                if ($method == '__construct') {
+                $methodName = $method->getName();
+                if ($methodName == '__construct') {
                     continue;
                 }
-                $proc = new Procedure($method->name, array('code' => function ($params) use ($args, $method) {
-                        return $args->{$method->name}($params);
+                $procedure = new Procedure($methodName, array('code' => function ($params) use ($obj, $methodName) {
+                        return $obj->$methodName($params);
                     }));
-                $this->offsetSet($method->name, $proc);
+                $this->atImplicit($methodName, $procedure);
             }
         }
     }
 
     /**
      * Push an element onto the end of the map
-     * @param Base $obj
+     * @param Base|mixed $obj
      * @return $this
      */
     public function push($obj)
     {
         if ($obj instanceof Base) {
             array_push($this->values, $obj);
+        } else {
+            array_push($this->values, TypeFactory::createInstance(null, $obj));
         }
         return $this;
     }
@@ -88,13 +119,15 @@ class Map extends BaseIterator
 
     /**
      * Prepend an element to the beginning of the map
-     * @param Base $obj
+     * @param Base|mixed $obj
      * @return $this
      */
     public function unshift($obj)
     {
         if ($obj instanceof Base) {
             array_unshift($this->values, $obj);
+        } else {
+            array_unshift($this->values, TypeFactory::createInstance(null, $obj));
         }
         return $this;
     }
@@ -119,7 +152,7 @@ class Map extends BaseIterator
 
     /**
      * Return the element at the index, or null; equivalent of brackets []
-     * @param string $index
+     * @param int|string $index
      * @return Base|null
      */
     public function at($index)
@@ -129,16 +162,33 @@ class Map extends BaseIterator
 
     /**
      * Return the element at the index, creating it if it doesn't exist and assigning a value
-     * @param $index
+     * @param int|string $index
      * @param mixed|null $value
      * @return mixed
      */
     public function atImplicit($index, $value = null)
     {
         if (!array_key_exists($index, $this->values)) {
-            $this->values[$index] = $value;
+            $this->offsetSet($index, $value);
         }
-        return $this->values[$index];
+        return $this->offsetGet($index);
+    }
+
+    /**
+     * @param int|string $index
+     */
+    public function delete($index)
+    {
+        return $this->offsetUnset($index);
+    }
+
+    /**
+     * @param int|string $index
+     * @return bool
+     */
+    public function has($index)
+    {
+        return $this->offsetExists($index);
     }
 
     /**
@@ -151,9 +201,6 @@ class Map extends BaseIterator
         foreach ($this->values as $index => $value) {
             if ($value instanceof Base) {
                 $ret[$index] = $value->asFlat();
-            }
-            else {
-                $ret[$index] = $value;
             }
         }
         return $ret;
@@ -170,9 +217,6 @@ class Map extends BaseIterator
             if ($value instanceof Base) {
                 $ret[$index] = $value->toString();
             }
-            else {
-                $ret[$index] = $value;
-            }
 
             if ($ret[$index] == '') {
                 $ret[$index] = '""';
@@ -188,9 +232,25 @@ class Map extends BaseIterator
      */
     protected function copyObject($obj)
     {
+        $this->clear();
         foreach ($obj as $index => $value) {
             $this->offsetSet($index, $value->asFlat());
         }
+    }
+
+    /**
+     * Force conversion to Base object of a value set
+     *
+     * @param mixed $offset
+     * @param mixed $value
+     * @return mixed|void
+     */
+    public function offsetSet($offset, $value)
+    {
+        if (!$value instanceof Base) {
+            $value = TypeFactory::createInstance(null, $value);
+        }
+        return parent::offsetSet($offset, $value);
     }
 
 }

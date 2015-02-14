@@ -25,7 +25,7 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('1', $command->getFirst());
         $this->assertEquals('2', $command->getSecond());
         $this->setExpectedException('\Exception', 'Property "third" not exists');
-        $this->assertEquals(null, $command->getThird());
+        $this->assertNull($command->getThird());
     }
 
 } 

@@ -23,6 +23,9 @@ abstract class Base extends Entity
     /** @var Filter */
     protected $filter;
 
+    /** @var bool */
+    protected $debug;
+
     /**
      * @param string|null $id
      * @param mixed|null $args
@@ -32,9 +35,25 @@ abstract class Base extends Entity
         if ($id === null || $id == '') {
             $id = chr(rand(ord('a'), ord('z'))) . uniqid(rand(0, 7159541386));
         }
+        $this->debug = false;
         $this->id = $id;
         $this->filter = null;
         $this->init($args);
+    }
+
+    /**
+     * @param string $label
+     * @param mixed|null $args
+     */
+    protected function debugLog($label, $args = null)
+    {
+        if ($this->debug) {
+            echo "\n" . $label . "\n";
+            if (!is_null($args)) {
+                print_r($args);
+                echo "\n";
+            }
+        }
     }
 
     /**
@@ -115,10 +134,23 @@ abstract class Base extends Entity
     public function copy($obj)
     {
         if (get_class($this) == get_class($obj)) {
+            $this->debugLog('Base::copy');
             $this->copyObject($obj);
         }
         else {
             throw new \Exception('Unable to copy, the source object is not matching the destination object');
+        }
+    }
+
+    /**
+     * @param Filter $filter
+     */
+    public function setFilter($filter)
+    {
+        if ($filter instanceof Filter)
+        {
+            $this->debugLog('Base::setFilter', $filter->getType());
+            $this->filter = $filter;
         }
     }
 

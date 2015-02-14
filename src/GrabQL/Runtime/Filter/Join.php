@@ -20,6 +20,14 @@ class Join extends Filter
     /** @internal join glue */
     const JOIN_GLUE = ',';
 
+    /** @internal type */
+    const TYPE = 'Join';
+
+    public function __construct()
+    {
+        parent::__construct(self::TYPE);
+    }
+
     /**
      * @param mixed $mixed
      * @return string
@@ -28,14 +36,13 @@ class Join extends Filter
     {
         if ($mixed instanceof Map) {
             return implode(self::JOIN_GLUE, $mixed->toFlat());
-        } else if (is_array($mixed)) {
+        } elseif (is_array($mixed)) {
             $ret = array();
             foreach ($mixed as $item) {
                 $ret[] = $this->join($item);
             }
             return implode(self::JOIN_GLUE, $ret);
-        }
-        else {
+        } else {
             return $mixed;
         }
     }

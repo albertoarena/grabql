@@ -1,5 +1,5 @@
 <?php
-namespace Command;
+namespace Common;
 
 use GrabQL\Runtime\Common\Entity;
 
@@ -17,20 +17,6 @@ class EntityBox extends Entity
 
 class EntityTest extends \PHPUnit_Framework_TestCase
 {
-
-    /**
-     * @covers GrabQL\Runtime\Common\Entity::set
-     * @covers GrabQL\Runtime\Common\Entity::get
-     */
-    public function testSetGet()
-    {
-        $entity = new EntityBox();
-        $this->assertEquals('dummy', $entity->get('var'));
-        $this->assertEquals('php', $entity->getLanguage());
-        $entity->set('var', 'hello');
-        $this->assertEquals('hello', $entity->get('var'));
-        $this->assertEquals('php', $entity->getLanguage());
-    }
 
     /**
      * @covers GrabQL\Runtime\Common\Entity::__call
@@ -63,14 +49,29 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers GrabQL\Runtime\Common\Entity::__call
      * @covers GrabQL\Runtime\Common\Entity::checkArguments
+     * @covers GrabQL\Runtime\Common\Entity::set
      */
-    public function testNotExistingProperty()
+    public function testSetNotExistingProperty()
+    {
+        $entity = new EntityBox();
+        $entity->setVar('dummy2');
+        $this->setExpectedException('\Exception', 'Property "invalid" not exists');
+        $entity->setInvalid('hello');
+    }
+
+    /**
+     * @covers GrabQL\Runtime\Common\Entity::__call
+     * @covers GrabQL\Runtime\Common\Entity::checkArguments
+     * @covers GrabQL\Runtime\Common\Entity::get
+     */
+    public function testGetNotExistingProperty()
     {
         $entity = new EntityBox();
         $this->assertEquals('dummy', $entity->getVar());
         $this->assertEquals('php', $entity->getLanguage());
+        $this->assertNull($entity->get('notExistingProperty'));
         $this->setExpectedException('\Exception', 'Property "invalid" not exists');
-        $entity->setInvalid('hello');
+        $entity->getInvalid('hello');
     }
 
     /**

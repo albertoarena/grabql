@@ -102,6 +102,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('type', $syntaxTree[0]['token']);
         $this->assertEquals(Parser\Lexer::T_LOWER_THAN, $syntaxTree[0]['token']['type']);
         $this->assertEquals('<', $syntaxTree[0]['token']['value']);
-        $this->assertEquals(null, $syntaxTree[0]['data']);
+        $this->assertNull($syntaxTree[0]['data']);
     }
 } 

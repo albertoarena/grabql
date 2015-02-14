@@ -16,6 +16,15 @@ use GrabQL\Runtime\Type\Base;
 
 class Json extends Filter
 {
+
+    /** @internal type */
+    const TYPE = 'Json';
+
+    public function __construct()
+    {
+        parent::__construct(self::TYPE);
+    }
+
     /**
      * @param mixed $mixed
      * @return mixed|string

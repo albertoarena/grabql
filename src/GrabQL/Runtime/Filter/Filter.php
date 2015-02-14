@@ -14,6 +14,25 @@ namespace GrabQL\Runtime\Filter;
 
 abstract class Filter
 {
+    /** @var string */
+    protected $type;
+
+    /**
+     * @param string $type
+     */
+    public function __construct($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
     /**
      * @param mixed $mixed
      * @return mixed

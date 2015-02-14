@@ -268,6 +268,9 @@ class SelectTest extends \PHPUnit_Framework_TestCase
      * @covers GrabQL\Runtime\Command\Select::processNode
      * @covers GrabQL\Runtime\Command\Select::applyXPath
      * @covers GrabQL\Runtime\Command\Select::setCurlClass
+     * @covers GrabQL\Runtime\Type\Map::init
+     * @covers GrabQL\Runtime\Type\Map::initFromArray
+     * @covers GrabQL\Runtime\Type\Map::at
      */
     public function testToIsMapExecute()
     {
@@ -277,7 +280,6 @@ class SelectTest extends \PHPUnit_Framework_TestCase
         $select = $this->createSelect();
         $select->setTo($map);
         $select->execute(null);
-        $this->assertEquals('123', $map->at('dummy'));
         $this->assertEquals('title', $map->at('0'));
     }
 

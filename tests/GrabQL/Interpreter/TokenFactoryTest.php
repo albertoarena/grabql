@@ -36,7 +36,7 @@ class TokenFactoryTest extends \PHPUnit_Framework_TestCase
     public function testInvalidBuild()
     {
         $obj = TokenFactory::build(Lexer::T_NONE);
-        $this->assertEquals(null, $obj);
+        $this->assertNull($obj);
     }
 
 }

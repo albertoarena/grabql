@@ -23,14 +23,37 @@ class Procedure extends Base implements Executable
     protected $code;
 
     /**
-     * @param null $args
+     * @param mixed $code
+     * @return bool
+     */
+    protected function isValidCode($code)
+    {
+        return (is_callable($code) || $code instanceof \Closure || (is_object($code) && get_class($code) == 'Closure'));
+    }
+
+    /**
+     * @param callable|array|null $args
+     * @throws \Exception
      * @return mixed|void
      */
     protected function init($args = null)
     {
         $this->setParams(array());
         $this->setCode(null);
-        $this->setProperties($args);
+        if (is_array($args)) {
+            if (array_key_exists('code', $args)) {
+                $this->setCode($args['code']);
+            }
+            if (array_key_exists('params', $args) && is_array($args['params'])) {
+                $this->setParams($args['params']);
+            }
+        }
+        else if ($this->isValidCode($args)) {
+            $this->setCode($args);
+        }
+        else if (!is_null($args)) {
+            throw new \Exception('Invalid callback, cannot initialise a procedure');
+        }
     }
 
     /**
@@ -64,11 +87,27 @@ class Procedure extends Base implements Executable
     }
 
     /**
+     * @param callable $code
+     */
+    public function setCode($code)
+    {
+        if ($this->isValidCode($code)) {
+            $this->debugLog('Procedure::setCode');
+            $this->code = $code;
+        }
+    }
+
+    /**
      * @return mixed|string
      */
     protected function asFlat()
     {
-        return '[procedure]';
+        return json_encode(array(
+            'procedure' => array(
+                'params' => $this->params,
+                'code' => ($this->code != null) ? '[Closure]' : null
+            )
+        ));
     }
 
     /**

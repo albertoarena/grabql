@@ -25,14 +25,14 @@ class TypeFactory
     {
         if ($value instanceof Type\Base) {
             return new Type\Reference($id, $value);
-        } elseif (is_array($value) || is_object($value)) {
-            return new Type\Map($id, $value);
-        } elseif (is_resource($value)) {
-            return new Type\Resource($id, $value);
-        } elseif (is_scalar($value)) {
-            return new Type\Scalar($id, $value);
         } elseif (is_callable($value)) {
             return new Type\Procedure($id, $value);
+        } elseif (is_resource($value)) {
+            return new Type\Resource($id, $value);
+        } elseif (is_array($value) || is_object($value)) {
+            return new Type\Map($id, $value);
+        } elseif (is_scalar($value)) {
+            return new Type\Scalar($id, $value);
         } else {
             return new Type\Nil($id, $value);
         }

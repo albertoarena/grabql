@@ -35,7 +35,7 @@ class VariableTest extends \PHPUnit_Framework_TestCase
         $instance = $variable->process($runtime, $token, $data);
         $this->assertEquals('id', $instance->getId());
         $this->assertEquals('Hello world!', $instance->getValue());
-        $this->assertEquals(null, $instance->getFilter());
+        $this->assertNull($instance->getFilter());
     }
 
     /**

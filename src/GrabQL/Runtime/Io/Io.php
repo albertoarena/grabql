@@ -16,4 +16,17 @@ abstract class Io
 {
     /** @var resource */
     protected $stream;
+
+    public function __construct()
+    {
+        $this->stream = NULL;
+    }
+
+    /**
+     * @return resource
+     */
+    public function getStream()
+    {
+        return $this->stream;
+    }
 } 

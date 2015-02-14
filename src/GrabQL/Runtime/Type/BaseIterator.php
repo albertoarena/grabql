@@ -109,4 +109,15 @@ abstract class BaseIterator extends Base implements \Iterator, \ArrayAccess
     {
         unset($this->values[$offset]);
     }
+
+    /**
+     *
+     */
+    public function clear()
+    {
+        for ($i = 0; $i < count($this->values); $i++) {
+            unset($this->values[$i]);
+        }
+        $this->values = array();
+    }
 } 

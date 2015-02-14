@@ -24,7 +24,7 @@ class Entity
     {
         if (preg_match('~^(set|get|nop)([A-Z])(.*)$~', $methodName, $matches)) {
             $property = strtolower($matches[2]) . $matches[3];
-            if (!property_exists($this, $property)) {
+            if (property_exists($this, $property) !== true) {
                 throw new \Exception('Property "' . $property . '" not exists');
             }
             if ($matches[1] == 'set') {
@@ -43,9 +43,13 @@ class Entity
      * @param string $property
      * @return mixed
      */
-    public function get($property)
+    protected function get($property)
     {
-        return $this->$property;
+        if (property_exists($this, $property) === true) {
+            return $this->$property;
+        }
+        // @todo Even if it works fine, for some reason the following return is not included in code coverage
+        return null;
     }
 
     /**
@@ -53,9 +57,11 @@ class Entity
      * @param mixed $value
      * @return $this
      */
-    public function set($property, $value)
+    protected function set($property, $value)
     {
-        $this->$property = $value;
+        if (property_exists($this, $property) === true) {
+            $this->$property = $value;
+        }
         return $this;
     }
 

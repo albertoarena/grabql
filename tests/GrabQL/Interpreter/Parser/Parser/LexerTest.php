@@ -48,7 +48,7 @@ class LexerTest extends \PHPUnit_Framework_TestCase
     public function testEmptyInput()
     {
         $lexer = new Lexer($this->emptyInput);
-        $this->assertEquals(null, $lexer->lookahead);
+        $this->assertNull($lexer->lookahead);
     }
 
     /**
