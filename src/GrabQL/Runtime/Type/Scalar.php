@@ -27,16 +27,31 @@ class Scalar extends Base
     }
 
     /**
+     * @param mixed $value
+     * @throws \Exception
+     */
+    protected function setValue($value)
+    {
+        if (is_scalar($value)) {
+            if (is_bool($value)) {
+                $value = intval($value);
+            }
+            $this->value = $value;
+        } else if (is_null($value)) {
+            //
+        } else if (is_array($value) && count($value) == 0) {
+            //
+        } else {
+            throw new \Exception('Invalid value for scalar');
+        }
+    }
+
+    /**
      * @return mixed
      */
     protected function asFlat()
     {
-        if ($this->value instanceof Base) {
-            return $this->value->asFlat();
-        }
-        else {
-            return $this->value;
-        }
+        return $this->value;
     }
 
     /**
@@ -44,12 +59,7 @@ class Scalar extends Base
      */
     protected function asString()
     {
-        if ($this->value instanceof Base) {
-            return $this->value->toString();
-        }
-        else {
-            return (string) $this->value;
-        }
+        return (string)$this->value;
     }
 
     /**
