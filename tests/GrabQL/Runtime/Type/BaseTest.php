@@ -173,7 +173,12 @@ class BaseTest extends \PHPUnit_Framework_TestCase
         $mock2 = $this->createMock();
         $this->base->copy($mock2);
         $this->base->setDebug(true);
-        $this->expectOutputString("\n" . 'Base::copy' . "\n");
+        $this->expectOutputRegex('/\nBase::copy\nArray\n\(\n'.
+            '[\s]*\[id\][\s]=>[\s]([a-z][a-z0-9]*)\n' .
+            '[\s]*\[class\][\s]=>[\s][A-Za-z0-9_]*\n'.
+            '\)\n'.
+            '/'
+        );
         $this->base->copy($mock2);
     }
-} 
+}
