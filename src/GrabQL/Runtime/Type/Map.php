@@ -85,7 +85,7 @@ class Map extends BaseIterator
                 if ($methodName == '__construct') {
                     continue;
                 }
-                $procedure = new Procedure($methodName, array('code' => function ($params) use ($obj, $methodName) {
+                $procedure = new Procedure($methodName, array('code' => function ($params = null) use ($obj, $methodName) {
                         return $obj->$methodName($params);
                     }));
                 $this->atImplicit($methodName, $procedure);
