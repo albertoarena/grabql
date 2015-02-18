@@ -134,7 +134,7 @@ abstract class Base extends Entity
     public function copy($obj)
     {
         if (get_class($this) == get_class($obj)) {
-            $this->debugLog('Base::copy');
+            $this->debugLog('Base::copy', array('id' => $obj->getId(), 'class' => get_class($obj)));
             $this->copyObject($obj);
         }
         else {
