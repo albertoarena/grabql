@@ -15,9 +15,6 @@ namespace GrabQL\Runtime\Type;
 // @todo Mock class, it should manage a true stream
 class Resource extends Base
 {
-    /** @var resource */
-    protected $resource;
-
     /** @var string */
     protected $stream;
 
@@ -39,34 +36,50 @@ class Resource extends Base
     }
 
     /**
-     * @param resource $buffer
+     * @param mixed $buffer
      * @param int|null $length
+     * @return mixed
      */
     public function read($buffer, $length = null)
     {
         // @todo
+        return null;
     }
 
     /**
-     * @param resource|string $buffer
+     * @param mixed $buffer
      * @param int|null $length
      */
     public function write($buffer, $length = null)
     {
         if (is_resource($buffer)) {
+            if (is_null($length)) {
+                $length = -1;
+            }
             $this->stream .= stream_get_contents($buffer, $length);
-        }
-        else if ($buffer instanceof Map) {
-            // @todo Improve streaming of Map, currently limited to value
+        } else if ($buffer instanceof Map) {
+            $i = 0;
             foreach ($buffer as $index => $value) {
                 $this->stream .= $value->getValue();
+                $i++;
+                if ($length !== null && $i == $length) {
+                    break;
+                }
             }
-        }
-        else if ($buffer instanceof Base) {
-            $this->stream .= substr($buffer->asString(), 0, $length);
-        }
-        else {
-            $this->stream .= substr($buffer, 0, $length);
+        } else if ($buffer instanceof Base) {
+            if (is_null($length)) {
+                $this->stream .= substr($buffer->asString(), 0);
+            }
+            else {
+                $this->stream .= substr($buffer->asString(), 0, $length);
+            }
+        } else {
+            $buffer = strval($buffer);
+            if (is_null($length)) {
+                $this->stream .= substr($buffer, 0);
+            } else {
+                $this->stream .= substr($buffer, 0, $length);
+            }
         }
     }
 
