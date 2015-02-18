@@ -14,7 +14,7 @@ namespace GrabQL\Runtime\Type;
 
 use GrabQL\Runtime\Common\Executable;
 
-class Procedure extends Base implements Executable
+class   Procedure extends Base implements Executable
 {
     /** @var array */
     protected $params;
@@ -28,7 +28,7 @@ class Procedure extends Base implements Executable
      */
     protected function isValidCode($code)
     {
-        return (is_callable($code) || $code instanceof \Closure || (is_object($code) && get_class($code) == 'Closure'));
+        return (is_callable($code) || $code instanceof \Closure || (is_object($code) && get_class($code) == '\Closure'));
     }
 
     /**
@@ -81,7 +81,7 @@ class Procedure extends Base implements Executable
                 $args = array($args);
             }
             $callArgs = $this->arrayCombine($this->getParams(), $args);
-            return call_user_func($code, $callArgs);
+            return call_user_func_array($code, $callArgs);
         }
         return null;
     }
