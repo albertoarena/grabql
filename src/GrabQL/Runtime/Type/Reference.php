@@ -29,11 +29,14 @@ class Reference extends Base
     /**
      * Set a reference to another existing object
      * @param $obj
+     * @throws \Exception
      */
     public function setReference($obj)
     {
         if ($obj instanceof Base) {
             $this->reference = $obj;
+        } else if ($obj !== null) {
+            throw new \Exception('Invalid reference');
         }
     }
 
@@ -66,6 +69,22 @@ class Reference extends Base
             return $this->reference->asString();
         }
         return '';
+    }
+
+    /**
+     * Overwrite copy to allow copying a reference of the same type
+     *
+     * @param Base $obj
+     * @throws \Exception
+     */
+    public function copy($obj)
+    {
+        if (is_null($this->reference) || get_class($this->reference) == get_class($obj)) {
+            $this->copyObject($obj);
+        }
+        else {
+            throw new \Exception('Unable to copy, the source object is not matching the destination object');
+        }
     }
 
     /**
