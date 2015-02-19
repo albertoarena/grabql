@@ -20,8 +20,9 @@ class RuntimeTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers GrabQL\Runtime\Runtime::setMain
+     * @covers GrabQL\Runtime\Runtime::execute
      */
-    public function testSetMain()
+    public function testSetMainCallback()
     {
         $runtime = new Runtime();
         $callback = function () use ($runtime) {
@@ -32,7 +33,24 @@ class RuntimeTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers GrabQL\Runtime\Runtime::setMain
      * @covers GrabQL\Runtime\Runtime::execute
+     */
+    public function testSetMainProcedure()
+    {
+        $runtime = new Runtime();
+        $callback = function () use ($runtime) {
+            $this->assertEquals(Runtime::STATUS_RUN, $runtime->getStatus());
+        };
+        $procedure = new \GrabQL\Runtime\Type\Procedure(null, $callback);
+        $runtime->setMain($procedure);
+        $runtime->execute();
+    }
+
+    /**
+     * @covers GrabQL\Runtime\Runtime::execute
+     * @covers GrabQL\Runtime\Runtime::setStatus
+     * @covers GrabQL\Runtime\Runtime::setStatus
      */
     public function testExecute()
     {
@@ -42,8 +60,50 @@ class RuntimeTest extends PHPUnit_Framework_TestCase
             $var = 2;
         };
         $runtime->setMain($callback);
+        $this->assertEquals(Runtime::STATUS_IDLE, $runtime->getStatus());
         $runtime->execute();
+        $this->assertEquals(Runtime::STATUS_RUN, $runtime->getStatus());
         $this->assertEquals(2, $var);
+    }
+
+    /**
+     * @covers GrabQL\Runtime\Runtime::bootstrap
+     * @covers GrabQL\Runtime\Runtime::setStatus
+     * @covers GrabQL\Runtime\Runtime::loadDefaultLibraries
+     */
+    public function testBootstrap()
+    {
+        $runtime = new Runtime();
+        $this->assertEquals(Runtime::STATUS_IDLE, $runtime->getStatus());
+        $runtime->bootstrap();
+        $this->assertEquals(Runtime::STATUS_BOOTSTRAP, $runtime->getStatus());
+    }
+
+    /**
+     * @covers GrabQL\Runtime\Runtime::stop
+     * @covers GrabQL\Runtime\Runtime::setStatus
+     * @covers GrabQL\Runtime\Runtime::loadDefaultLibraries
+     */
+    public function testStop()
+    {
+        $runtime = new Runtime();
+        $this->assertEquals(Runtime::STATUS_IDLE, $runtime->getStatus());
+        $runtime->stop();
+        $this->assertEquals(Runtime::STATUS_STOP, $runtime->getStatus());
+    }
+
+    /**
+     * @covers GrabQL\Runtime\Runtime::error
+     * @covers GrabQL\Runtime\Runtime::setStatus
+     * @covers GrabQL\Runtime\Runtime::loadDefaultLibraries
+     */
+    public function testError()
+    {
+        $runtime = new Runtime();
+        $this->assertEquals(Runtime::STATUS_IDLE, $runtime->getStatus());
+        $this->expectOutputString('Error: message' . "\n");
+        $runtime->error('message');
+        $this->assertEquals(Runtime::STATUS_ERROR, $runtime->getStatus());
     }
 
     /**

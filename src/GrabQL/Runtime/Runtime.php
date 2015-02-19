@@ -106,8 +106,7 @@ class Runtime implements Executable
      */
     public function setMain($callback)
     {
-        if (is_callable($callback))
-        {
+        if ($callback instanceof Procedure || is_callable($callback)) {
             $this->main = $callback;
         }
         return $this;
@@ -130,12 +129,10 @@ class Runtime implements Executable
     public function execute($args = null)
     {
         $this->setStatus(self::STATUS_RUN);
-        if ($this->main !== null)
-        {
+        if ($this->main !== null) {
             if ($this->main instanceof Procedure) {
                 $this->main->execute($args);
-            }
-            else {
+            } else {
                 call_user_func($this->main, $args);
             }
         }
