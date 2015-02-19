@@ -30,6 +30,9 @@ class Collection implements \IteratorAggregate
     {
         // Try to instantiate a new $class
         try {
+            if (!class_exists($class)) {
+                throw new \Exception('');
+            }
             $test = new $class(null, array());
             if (!$test instanceof Base) {
                 throw new \Exception('[GrabQL\Runtime\Collection] Class ' . $class . ' not valid');
@@ -48,7 +51,7 @@ class Collection implements \IteratorAggregate
      */
     public function add($object)
     {
-        if ($object instanceof Base) {
+        if ($object instanceof $this->class) {
             $this->list[$object->getId()] = $object;
         }
         return $this;
@@ -95,5 +98,13 @@ class Collection implements \IteratorAggregate
     public function getIterator()
     {
         return new \ArrayIterator($this->list);
+    }
+
+    /**
+     * @return string
+     */
+    public function getClass()
+    {
+        return $this->class;
     }
 }
