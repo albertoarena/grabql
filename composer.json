@@ -1,7 +1,7 @@
 {
     "name": "albertoarena/grabql",
     "description": "GrabQL (grab query language) for PHP",
-    "keywords": ["GrabQL", "grab", "query language"],
+    "keywords": ["GrabQL", "grab", "query language", "scraper", "scraping"],
     "license": ["MIT", "GPLv2", "BSD-3"],
     "authors": [
         {
